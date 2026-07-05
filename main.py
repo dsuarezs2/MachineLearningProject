@@ -68,10 +68,8 @@ FRIENDLY_NAMES = {
 def startup_event():
     global scaler, feature_columns, pipeline_params
 
-    if not os.path.exists('models/rf_model.joblib'):
-        print("Modelos no encontrados. Entrenando...")
-        import train
-        train.main()
+    if not os.path.exists("models/rf_model.joblib"):
+        raise RuntimeError("No se encontraron los modelos.")
 
     models['rf'] = joblib.load('models/rf_model.joblib')
     models['lr'] = joblib.load('models/lr_model.joblib')
