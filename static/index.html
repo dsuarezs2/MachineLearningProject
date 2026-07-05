@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardioInsight AI — Diagnóstico Inteligente de Salud Cardíaca</title>
+    <!-- Google Fonts: Outfit and Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-decor">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fa-solid fa-heart-pulse pulse-icon"></i>
+                <h1>CardioInsight <span>AI</span></h1>
+            </div>
+            <p class="subtitle">Diagnóstico y explicabilidad del riesgo de enfermedad cardíaca basado en IA</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Columna Izquierda: Formulario -->
+            <section class="form-section glass-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-notes-medical"></i> Datos Clínicos del Paciente</h2>
+                    <p>Complete todos los campos para evaluar el riesgo</p>
+                </div>
+
+                <form id="patient-form" novalidate>
+                    <!-- Sección 1: Datos Generales -->
+                    <fieldset class="form-grid">
+                        <legend>Datos Demográficos</legend>
+                        
+                        <div class="input-group">
+                            <label for="age">Edad (Años)</label>
+                            <input type="number" id="age" name="age" required min="1" max="120" value="54" placeholder="Ej: 54">
+                            <span class="error-msg">Por favor, ingrese una edad válida.</span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="sex">Sexo</label>
+                            <select id="sex" name="sex" required>
+                                <option value="Male" selected>Masculino</option>
+                                <option value="Female">Femenino</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="dataset">Origen del Paciente</label>
+                            <select id="dataset" name="dataset" required>
+                                <option value="Cleveland" selected>Cleveland (EE.UU.)</option>
+                                <option value="Hungary">Hungría</option>
+                                <option value="Switzerland">Suiza</option>
+                                <option value="VA Long Beach">Long Beach (EE.UU.)</option>
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <!-- Sección 2: Signos Vitales y Laboratorio -->
+                    <fieldset class="form-grid">
+                        <legend>Signos Vitales y Laboratorio</legend>
+
+                        <div class="input-group">
+                            <label for="trestbps">Presión Arterial en Reposo (mmHg)</label>
+                            <input type="number" id="trestbps" name="trestbps" min="50" max="250" placeholder="Ej: 130 (Dejar vacío para usar mediana)">
+                            <small class="helper-text">Mediana: 130 mmHg</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="chol">Colesterol Sérico (mg/dl)</label>
+                            <input type="number" id="chol" name="chol" min="50" max="600" placeholder="Ej: 223 (Dejar vacío para usar mediana)">
+                            <small class="helper-text">Mediana: 223 mg/dl</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="fbs">Azúcar en Sangre en Ayunas > 120 mg/dl</label>
+                            <select id="fbs" name="fbs">
+                                <option value="false" selected>No (Normal)</option>
+                                <option value="true">Sí (Elevado)</option>
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <!-- Sección 3: Pruebas Cardíacas -->
+                    <fieldset class="form-grid">
+                        <legend>Resultados de Exámenes</legend>
+
+                        <div class="input-group">
+                            <label for="cp">Tipo de Dolor de Pecho</label>
+                            <select id="cp" name="cp" required>
+                                <option value="asymptomatic" selected>Asintomático</option>
+                                <option value="atypical angina">Angina Atípica</option>
+                                <option value="non-anginal">Dolor No Anginoso</option>
+                                <option value="typical angina">Angina Típica</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="restecg">Electrocardiograma en Reposo</label>
+                            <select id="restecg" name="restecg">
+                                <option value="normal" selected>Normal</option>
+                                <option value="st-t abnormality">Anomalía de onda ST-T</option>
+                                <option value="lv hypertrophy">Hipertrofia Ventricular Izquierda</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="thalch">Frecuencia Cardíaca Máxima (FC Max)</label>
+                            <input type="number" id="thalch" name="thalch" min="50" max="250" placeholder="Ej: 140 (Dejar vacío para usar mediana)">
+                            <small class="helper-text">Mediana: 140 lpm</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="exang">Angina Inducida por Ejercicio</label>
+                            <select id="exang" name="exang">
+                                <option value="false" selected>No</option>
+                                <option value="true">Sí</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="oldpeak">Depresión del segmento ST (Oldpeak)</label>
+                            <input type="number" id="oldpeak" name="oldpeak" step="0.1" min="0" max="10" placeholder="Ej: 0.5 (Dejar vacío para usar mediana)">
+                            <small class="helper-text">Mediana: 0.5</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="slope">Pendiente del segmento ST</label>
+                            <select id="slope" name="slope">
+                                <option value="flat" selected>Plana (Flat)</option>
+                                <option value="upsloping">Ascendente (Upsloping)</option>
+                                <option value="downsloping">Descendente (Downsloping)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="ca">Vasos Coloreados por Fluoroscopía</label>
+                            <select id="ca" name="ca">
+                                <option value="0" selected>0 Vasos</option>
+                                <option value="1">1 Vaso</option>
+                                <option value="2">2 Vasos</option>
+                                <option value="3">3 Vasos</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="thal">Talasemia (Thal)</label>
+                            <select id="thal" name="thal">
+                                <option value="normal" selected>Normal</option>
+                                <option value="fixed defect">Defecto Fijo</option>
+                                <option value="reversable defect">Defecto Reversible</option>
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <!-- Selector de Modelo -->
+                    <div class="model-selector-container">
+                        <label for="model_name"><i class="fa-solid fa-microchip"></i> Modelo Predictivo</label>
+                        <select id="model_name" name="model_name" class="model-select">
+                            <option value="rf">Random Forest (Mejor rendimiento)</option>
+                            <option value="lr">Regresión Logística (Altamente interpretable)</option>
+                            <option value="dt">Árbol de Decisión (Simple)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <span>Evaluar Paciente</span>
+                        <i class="fa-solid fa-heart-pulse pulse-fast"></i>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Columna Derecha: Dashboard de Resultados -->
+            <section class="results-section">
+                <!-- Panel de Bienvenida (ocultado tras procesar) -->
+                <div id="welcome-panel" class="glass-panel centered-content">
+                    <div class="pulse-container">
+                        <div class="radar-ping"></div>
+                        <i class="fa-solid fa-heart-pulse icon-big"></i>
+                    </div>
+                    <h3>Listo para Diagnosticar</h3>
+                    <p>Complete el formulario de la izquierda con los parámetros clínicos del paciente y haga clic en <strong>Evaluar Paciente</strong> para generar el diagnóstico predictivo e interpretable.</p>
+                </div>
+
+                <!-- Panel de Carga (ocultado por defecto) -->
+                <div id="loading-panel" class="glass-panel centered-content hidden">
+                    <div class="spinner"></div>
+                    <h3>Procesando diagnóstico...</h3>
+                    <p>Evaluando datos en base al modelo seleccionado</p>
+                </div>
+
+                <!-- Resultados del Diagnóstico (ocultado por defecto) -->
+                <div id="results-panel" class="hidden">
+                    <div class="glass-panel diagnosis-summary">
+                        <h3>Resultado del Diagnóstico</h3>
+                        
+                        <div class="diagnosis-layout">
+                            <!-- Medidor de Riesgo SVG -->
+                            <div class="risk-gauge-container">
+                                <svg class="risk-gauge" viewBox="0 0 100 50">
+                                    <!-- Arco de fondo -->
+                                    <path class="gauge-bg" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8"></path>
+                                    <!-- Arco activo -->
+                                    <path id="gauge-fill" class="gauge-fill risk-low" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke-width="8" stroke-dasharray="125.6" stroke-dashoffset="125.6"></path>
+                                    <!-- Texto central -->
+                                    <text id="gauge-percentage" x="50" y="44" class="gauge-text" text-anchor="middle">0%</text>
+                                </svg>
+                                <span class="gauge-label">PROBABILIDAD DE RIESGO</span>
+                            </div>
+
+                            <!-- Tarjeta de Diagnóstico -->
+                            <div class="diagnosis-card">
+                                <span id="risk-badge" class="risk-badge badge-low">Riesgo Bajo</span>
+                                <h4 id="diagnosis-text">Sin Enfermedad Predictiva</h4>
+                                <p id="model-info">Modelo utilizado: Random Forest</p>
+                                <div class="alert-box">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span>Este resultado es un análisis predictivo y no sustituye una consulta médica profesional.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel de Gráficos de Contribución -->
+                    <div class="glass-panel contributions-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-chart-column"></i> Factores de Impacto Clínico</h3>
+                            <p>Variables que más influyeron en la probabilidad de este paciente</p>
+                        </div>
+                        
+                        <!-- Gráfico de Chart.js -->
+                        <div class="chart-wrapper">
+                            <canvas id="impact-chart"></canvas>
+                        </div>
+                        
+                        <!-- Lista Detallada de Contribuciones -->
+                        <div class="contributions-list-container">
+                            <h4>Desglose detallado por variable:</h4>
+                            <ul id="contributions-list" class="contributions-list">
+                                <!-- Llenado dinámico -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <p>&copy; 2026 CardioInsight AI. Herramienta de investigación médica. Los modelos son entrenados con el conjunto de datos Heart Disease de la UCI.</p>
+        </footer>
+    </div>
+
+    <!-- Script principal de la aplicación -->
+    <script src="app.js"></script>
+</body>
+</html>
